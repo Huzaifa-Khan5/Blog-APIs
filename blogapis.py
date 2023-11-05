@@ -1,6 +1,7 @@
 from flask import Flask,render_template,request,jsonify
 import psycopg2
 import psycopg2.extras
+from psycopg2 import sql
 
 hostname='localhost'
 database='Blog'
@@ -25,14 +26,15 @@ def register():
                             user=username,
                             password=pwd,
                             port=port_id)
-        
     cur=conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
+    
+    loginQuery = sql.SQL("select email from {table} where {pkey} = %s").format(table=sql.Identifier('users'),pkey=sql.Identifier('email'))
 
-    cur.execute('SELECT * FROM users')
+    cur.execute(loginQuery, (get_email,))
     userdetails=cur.fetchall()
-    for email in userdetails:
-        if email['email']==get_email:
-            return 'email already exists'
+    print(userdetails)
+    if len(userdetails)>0:
+        return 'email already exists'
         
     create_script = '''CREATE TABLE IF NOT EXISTS users(
                         sno    SERIAL PRIMARY KEY,
@@ -40,15 +42,15 @@ def register():
                         password   varchar(100) NOT NULL)
                         '''
     cur.execute(create_script)
-            
+
     cur.execute('INSERT INTO users(email,password) VALUES(%s,%s)',(get_email,get_password))
 
     conn.commit()
 
     cur.close()
     conn.close()
-    return ''
 
+    return ''
 
 @app.route('/login',methods=['POST'])
 def login():
@@ -66,20 +68,15 @@ def login():
         
     cur=conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
-    cur.execute('SELECT * FROM users')
-    userdetails=cur.fetchall()
-    for details in userdetails:
-        print(details['email'],details['password'])
-        print(get_email,get_password)
-        if (details['email']==get_email) and (details['password']==get_password):
-            message='successfully login'
-            break
-        elif details['email']==get_email:
-            message='invalid password'
-        elif details['password']==get_password:
-            message='invalid email' 
-    
-    return message
+    loginQuery = sql.SQL("SELECT * FROM {table} WHERE {email} = %s AND {password} = %s").format(
+    table=sql.Identifier('users'),
+    email=sql.Identifier('email'),
+    password=sql.Identifier('password'))
+    cur.execute(loginQuery, (get_email, get_password))
+    if cur.fetchone():
+        return "Login successful"
+    else:
+        return "Invalid credentials"
 
 @app.route('/addblog',methods=['POST'])
 def add_blog():
@@ -94,7 +91,7 @@ def add_blog():
                         user=username,
                         password=pwd,
                         port=port_id)
-    cur=conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
+    cur=conn.cursor()
 
     create_script='''CREATE TABLE IF NOT EXISTS posts(
                      sno    SERIAL PRIMARY KEY,
@@ -104,13 +101,14 @@ def add_blog():
                      '''
     cur.execute(create_script)
         
-    cur.execute(f'INSERT INTO posts(title,content) VALUES({blog_title},{blog_content})')
+    cur.execute('INSERT INTO posts(title,content) VALUES(%s,%s)',(blog_content,blog_title))
 
     conn.commit()
 
     cur.close()
     conn.close()
-    return 'ssuccess'
+
+    return 'success'
 
 @app.route('/blog',methods=['POST'])
 def get_comment():
@@ -126,7 +124,7 @@ def get_comment():
                         password=pwd,
                         port=port_id)
         
-    cur=conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
+    cur=conn.cursor()
 
     create_script='''CREATE TABLE IF NOT EXISTS comments(
                         sno    SERIAL PRIMARY KEY,
@@ -136,16 +134,14 @@ def get_comment():
                         '''
     cur.execute(create_script)
 
-    cur.execute('INSERT INTO comments(name,comment) VALUES({name},{comment})')
-
-
+    cur.execute('INSERT INTO comments(name,comment) VALUES(%s,%s)',(name,comment))
 
     conn.commit()
 
     cur.close()
     conn.close()
 
-    return 'successfully added record'
+    return 'coment added successfully'
 
 
 if __name__ =="__main__":
