@@ -1,0 +1,148 @@
+{
+	"info": {
+		"_postman_id": "e38da21b-1a8a-4739-93ef-55044f33eca2",
+		"name": "Blog project",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "30237347"
+	},
+	"item": [
+		{
+			"name": "add comments",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n\"name\":\"Tehreem\",\r\n\"comment\":\"IT is all about blogging\"\r\n}"
+				},
+				"url": {
+					"raw": "http://127.0.0.1:5000/addcomments",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"addcomments"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "add blog",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTY5OTQ0MjM1OCwianRpIjoiMzkzYzE4NjktYTI3ZS00ZjQyLWE2ZjEtZjI3YzI0MTA4OGM4IiwidHlwZSI6ImFjY2VzcyIsInN1YiI6eyJrZXkiOjJ9LCJuYmYiOjE2OTk0NDIzNTgsImV4cCI6MTY5OTQ0MzI1OH0.PCZ9hFcXqDmHh6J1rEiFSttlcvYyf6NV-j1XobVE5DA",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"title\":\"First blog\",\r\n    \"content\":\"My first blogt\"\r\n}"
+				},
+				"url": {
+					"raw": "http://127.0.0.1:5000/addblog",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"addblog"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "register",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{   \r\n    \"username\":\"Huzaifa\",\r\n    \"email\":\"huzaifa@gmail.com\",\r\n    \"password\":\"123456\"\r\n}"
+				},
+				"url": {
+					"raw": "http://127.0.0.1:5000/register",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "login",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\":\"huzaifa@gmail.com\",\r\n    \"password\":\"123456\"\r\n}"
+				},
+				"url": {
+					"raw": "http://127.0.0.1:5000/login",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"login"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
